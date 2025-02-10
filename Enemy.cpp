@@ -40,7 +40,7 @@ void Enemy::Move() {
 
 void Enemy::Draw() {
 	if (isAlive_ == true) {
-		Novice::DrawEllipse(posX_, posY_, radius_, radius_, 0.0f, WHITE, kFillModeSolid);
+		Novice::DrawEllipse(posX_, posY_, radius_, radius_, 0.0f, RED, kFillModeSolid);
 	}
 }
 

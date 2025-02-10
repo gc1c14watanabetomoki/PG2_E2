@@ -21,10 +21,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	enum Scene {
 		Title,
 		Game,
-		GameOver
+		GameOver,
+		Clear
 	};
 	int scene = Title;
 
+	int killCount = 0;
 	const int baseSceneChangeTime = 60;
 	int sceneChangeTimer = baseSceneChangeTime;
 
@@ -48,10 +50,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				player = new Player(640, 640, 5, 30);
 				enemy = new Enemy(640, 200, 4, 25, true);
 				scene = Game;
+				killCount = 0;
 			}
 
 			break;
-
 		case Game:
 
 			player->Move(keys, preKeys);
@@ -66,6 +68,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (distance < radius * radius) {
 					player->SetBulletisShot(false);
 					enemy->SetIsAlive(false);
+					killCount++;
 				}
 			}
 			///当たり判定処理・プレイヤーと敵
@@ -86,6 +89,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					sceneChangeTimer = baseSceneChangeTime;
 				}
 			}
+			if (killCount == 3) {
+				sceneChangeTimer--;
+				if (sceneChangeTimer <= 0) {
+					scene = Clear;
+					sceneChangeTimer = baseSceneChangeTime;
+				}
+			}
 
 			break;
 		case GameOver:
@@ -97,12 +107,16 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			}
 
 			break;
+		case Clear:
+
+			if (keys[DIK_SPACE] && !preKeys[DIK_SPACE]) {
+				delete player;
+				delete enemy;
+				scene = Title;
+			}
+
+			break;
 		}
-
-		
-		
-
-
 
 		///
 		/// ↑更新処理ここまで
@@ -115,7 +129,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		case Title:
 
 			Novice::ScreenPrintf(100, 360, "TITLE");
-
+			Novice::ScreenPrintf(100, 380, "PRESS SPACE");
 
 			break;
 		case Game:
@@ -126,14 +140,23 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			enemy->Draw();
 
 
+			Novice::ScreenPrintf(10, 10, "Move = WASD or UP,LEFT,DOWN,RIGHT");
+			Novice::ScreenPrintf(10, 30, "Shot = SPACE");
 
 			break;
 		case GameOver:
 
 
 			Novice::ScreenPrintf(100, 360, "GAME OVER");
+			Novice::ScreenPrintf(100, 380, "PRESS SPACE");
 
 
+
+			break;
+		case Clear:
+
+			Novice::ScreenPrintf(100, 360, "GAME CLEAR");
+			Novice::ScreenPrintf(100, 380, "PRESS SPACE");
 
 			break;
 		}

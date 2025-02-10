@@ -7,7 +7,7 @@ private:
 	int radius_;
 	int speed_;
 	bool isAlive_;
-	const int baseRespawnTime = 300;
+	const int baseRespawnTime = 150;
 	int respawnTimer_ = baseRespawnTime;
 
 public:
